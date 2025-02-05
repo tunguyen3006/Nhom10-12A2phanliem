@@ -1,0 +1,24 @@
+<?php
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["image"])) {
+    $uploadDir = "photo"; // Thư mục lưu ảnh
+    $fileName = basename($_FILES["image"]["name"]);
+    $targetFile = $uploadDir . $fileName;
+    $fileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+
+    // Kiểm tra định dạng ảnh (chỉ cho phép JPG, PNG, GIF)
+    $allowedTypes = ["jpg", "jpeg", "png", "gif"];
+    if (!in_array($fileType, $allowedTypes)) {
+        die("Lỗi: Chỉ chấp nhận JPG, PNG, GIF!");
+    }
+
+    // Kiểm tra và di chuyển file vào thư mục uploads/
+    if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFile)) {
+        echo "Tải ảnh thành công! <br>";
+        echo "<img src='$targetFile' width='300'>";
+    } else {
+        echo "Lỗi khi tải ảnh!";
+    }
+} else {
+    die("Lỗi: Không có ảnh nào được chọn!");
+}
+?>
